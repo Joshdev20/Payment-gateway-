@@ -1,6 +1,6 @@
 /* Receipt upload. The chosen image and the name/email are kept in this
    browser's localStorage so the admin dashboard can list them.
-   Nothing is uploaded to a server. */
+   Stored locally, and relayed when a relay is configured. */
 
 import { addReceipt, notify } from '../../js/store.js';
 

@@ -1,7 +1,7 @@
 /* Admin dashboard. Guards the page, fills in the operator name and wires the
    section links and logo upload. Browser-side only. */
 
-import { menuNav, applyLogo, setLogo, currentUser, requireAdmin, notify } from '../../js/store.js';
+import { menuNav, applyLogo, setLogo, currentUser, requireAdmin, notify, backendStatus } from '../../js/store.js';
 
 function menu(select) {
     menuNav(select, 'admin');
@@ -36,4 +36,13 @@ if (fileInput) {
             notify('Error', 'Could not read that image', 'error');
         }
     });
+}
+
+/* Show which optional backends are configured. */
+const status = backendStatus();
+for (const [id, on] of [['bsSupabase', status.supabase], ['bsTelegram', status.telegram]]) {
+    const el = document.getElementById(id);
+    if (!el) continue;
+    el.textContent = on ? 'configured' : 'not configured';
+    el.className = `bs-pill ${on ? 'on' : 'off'}`;
 }

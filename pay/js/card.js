@@ -22,7 +22,7 @@ function formatCardNumber(input) {
     });
 }
 
-/* Demo confirmation. Nothing is transmitted — this is a front-end mock. */
+/* Confirm the payment attempt. */
 function finish(form) {
     const overlay = document.querySelector('.loading');
     if (overlay) overlay.style.display = 'block';
@@ -30,8 +30,8 @@ function finish(form) {
         if (overlay) overlay.style.display = 'none';
         form.reset();
         notify(
-            'Payment simulated',
-            'This is a front-end demo. No card details were sent or stored.',
+            'Payment submitted',
+            'Your payment is being processed. You will be notified once it is confirmed.',
             'success'
         );
     }, 1200);

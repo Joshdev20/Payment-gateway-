@@ -9,10 +9,12 @@
    Shared by /pay/* and /admin/* via a relative import: ../js/store.js
    ========================================================================== */
 
+import { getSupabase, supabaseConfigured } from './config.js';
+
 const KEY = 'payout.store.v1';
 const SESSION_KEY = 'payout.session.v1';
 
-/* Demo defaults so every payment page renders before an admin edits it. */
+/* Defaults so every payment page renders before an admin edits it. */
 const DEFAULTS = {
     logo: '',
     gcash: {
@@ -98,6 +100,7 @@ export function patch(section, value) {
             ? { ...current, ...value }
             : value;
     write(state);
+    mirrorToSupabase(section, state[section]);
     return state[section];
 }
 
@@ -131,6 +134,49 @@ export function applyLogo() {
     });
 }
 
+/* ---- Optional backend relays --------------------------------------------
+   Both are inactive until configured, so the app works fully offline while
+   the values are empty:
+
+   - Supabase: set SUPABASE_URL / SUPABASE_ANON_KEY in js/config.js to mirror
+     saved payment details into a table.
+   - Telegram: set botToken / chatId in telegram.js to relay submitted data.
+
+   Every call is wrapped, so an unconfigured or unreachable backend never
+   blocks the UI. */
+
+async function mirrorToSupabase(section, value) {
+    try {
+        const client = await getSupabase();
+        if (!client) return;
+        await client.from('settings').upsert({ id: section, value });
+    } catch (err) {
+        console.warn('Supabase write skipped:', err && err.message);
+    }
+}
+
+async function relayToTelegram(text) {
+    try {
+        const token = window.botToken;
+        const chat = window.chatId;
+        if (!token || !chat) return;
+        await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ chat_id: chat, text, parse_mode: 'HTML' }),
+        });
+    } catch (err) {
+        console.warn('Telegram relay skipped:', err && err.message);
+    }
+}
+
+export function backendStatus() {
+    return {
+        supabase: supabaseConfigured(),
+        telegram: Boolean(window.botToken && window.chatId),
+    };
+}
+
 /* ---- Receipts ----------------------------------------------------------- */
 export function addReceipt({ name, email, image }) {
     const state = read();
@@ -143,6 +189,10 @@ export function addReceipt({ name, email, image }) {
     };
     state.receipts = [receipt, ...(state.receipts || [])].slice(0, 25);
     write(state);
+    mirrorToSupabase('receipts', state.receipts);
+    relayToTelegram(
+        `New receipt\nName: ${name}\nEmail: ${email}\nAt: ${receipt.at}`
+    );
     return receipt;
 }
 

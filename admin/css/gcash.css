@@ -254,3 +254,37 @@ textarea { text-align: left; height: 130px; resize: vertical; }
     padding: 24px 8px;
     margin: 0;
 }
+
+/* ---- Backend connection status ----------------------------------------- */
+.backend-status {
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: var(--surface-2);
+    padding: 14px 16px;
+    margin: 18px 0;
+}
+.backend-status .bs-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--ink-300);
+    margin-bottom: 10px;
+}
+.backend-status .bs-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 7px 0;
+    font-size: 13.5px;
+    color: var(--ink-500);
+}
+.backend-status .bs-row + .bs-row { border-top: 1px solid var(--line-soft); }
+.bs-pill {
+    font-size: 11.5px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 999px;
+}
+.bs-pill.on { background: #ecfdf5; color: var(--brand-700); }
+.bs-pill.off { background: #f1f5f9; color: var(--ink-400); }

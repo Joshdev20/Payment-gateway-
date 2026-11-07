@@ -572,3 +572,13 @@ body {
 }
 
 .btc-flex .send_address { font-size: 13px; }
+
+/* Phone: keep the primary action inside the same 16px gutters as the payment
+   details above it, instead of running edge to edge. */
+@media (max-width: 700px) {
+    .mobile-section .made-btn,
+    .mobile-section .made-btn2 {
+        width: calc(100% - 32px);
+        margin: 8px 16px 0;
+    }
+}

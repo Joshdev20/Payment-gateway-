@@ -22,5 +22,3 @@ document.querySelector('form').addEventListener('submit', function (e) {
     }
 });
 
-/* Small convenience so the demo is easy to open. */
-console.info(`Demo admin login — user: ${ADMIN.user}  password: ${ADMIN.pass}`);
