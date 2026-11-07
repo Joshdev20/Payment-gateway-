@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        Payout
+    </title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="css/gcash.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+</head>
+<body>
+    <div class="container">
+        <center>
+            <b>
+                Edit Bank transfer
+            </b>
+        </center>
+
+        <form>
+            <div>
+                <input class="c-num" id="tBankName" type="text" placeholder="Bank Name" required>
+            </div>
+
+            <div>
+                <input class="c-num" id="tAcctName" type="text" placeholder="Account Name" required>
+            </div>
+
+            <div>
+                <input class="c-num" id="tAcctNum" type="tel" placeholder="Account Number" required>
+            </div>
+
+            <div>
+                <input class="c-num" id="tCurrency" type="text" placeholder="Currency" required>
+            </div>
+
+            <div>
+                <input class="c-num" id="tAmount" type="tel" placeholder="Amount" required>
+            </div>
+
+            <div>
+                <button class="pay-btn" id="editBtn">
+                    Edit
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <script type="module" src="js/transfer.js"></script>
+</body>
+</html>

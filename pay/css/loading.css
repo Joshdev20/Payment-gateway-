@@ -1,0 +1,40 @@
+/* Overlay shown while a payment step is processing. */
+.loading {
+    display: none;
+    position: fixed;
+    z-index: 999;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: rgba(255, 255, 255, .82);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    text-align: center;
+    padding-top: 28vh;
+}
+
+.spinner {
+    border: 8px solid rgba(5, 150, 105, .16);
+    border-top-color: #059669;
+    border-radius: 50%;
+    width: 64px;
+    height: 64px;
+    -webkit-animation: spin .9s linear infinite;
+    animation: spin .9s linear infinite;
+    margin: 0 auto;
+}
+
+@-webkit-keyframes spin {
+    0% { -webkit-transform: rotate(0deg); }
+    100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .spinner { animation-duration: 2.4s; }
+}

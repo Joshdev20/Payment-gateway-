@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        Payout
+    </title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+</head>
+<body>
+    <div class="top">
+        <div class="welcome-top">
+            Welcome Back..!! <b><span id="user"></span></b>
+        </div>
+
+        <div>
+            Payment gateway
+        </div>
+    </div>
+
+    <div class="container">
+
+        <div class="each-select" onclick="menu('gcash')">
+            <div>
+                <i class="bi bi-bank"></i>
+            </div>
+
+            <div>
+                <b>
+                    Pay with Gcash
+                </b>
+            </div>
+        </div>
+
+        <div class="each-select" onclick="menu('paymaya')">
+            <div>
+                <div class="label-new">
+                    NEW
+                </div>
+            </div>
+
+            <div>
+                <b>
+                    Pay with Paymaya
+                </b>
+            </div>
+        </div>
+
+        <div class="each-select" onclick="menu('bank')">
+            <div>
+                <i class="bi bi-bank"></i>
+            </div>
+
+            <div>
+                <b>
+                    Transfer
+                </b>
+            </div>
+        </div>
+
+        <div class="each-select" onclick="menu('bitcoin')">
+            <div>
+                <i class="bi bi-coin"></i>
+            </div>
+
+            <div>
+                <b>
+                    Wallet
+                </b>
+            </div>
+        </div>
+
+        <div class="each-select" onclick="menu('wumg')">
+            <div>
+                <i class="bi bi-bank2"></i>
+            </div>
+
+            <div>
+                <b>
+                    WU/MG Address
+                </b>
+            </div>
+        </div>
+    </div>
+
+    <div class="upload-container" onclick="document.getElementById('fileInput').click()">
+        <div class="d-line">
+            UPLOAD LOGO
+            <input type="file" id="fileInput" accept="image/*" style="display:none">
+        </div>
+    </div>
+
+<!-- Display uploaded logo -->
+<img id="logoDisplay" src="" alt="Logo" width="150">
+
+<script type="module" src="js/menu.js"></script>
+
+</body>
+</html>
