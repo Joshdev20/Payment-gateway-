@@ -490,11 +490,13 @@ body {
 .down-label .bi-lock-fill { color: var(--brand-500); }
 
 /* ---- Method sheet ------------------------------------------------------ */
+/* Method sheet. Closed by default: the page shows its payment details and the
+   sheet opens only when the visitor taps "Change Payment Method". */
 .menu-section {
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
     background: var(--surface);
-    display: block;
+    display: none;
     z-index: 60;
     overflow-y: auto;
     animation: sheet-in .22s ease both;
