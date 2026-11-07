@@ -6,8 +6,8 @@
     <title>
         Payout
     </title>
-    <link rel="stylesheet" href="css/style.css?v=3">
-    <link rel="stylesheet" href="css/loading.css?v=3">
+    <link rel="stylesheet" href="css/style.css?v=4">
+    <link rel="stylesheet" href="css/loading.css?v=4">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
 </head>
 <body>
@@ -160,6 +160,11 @@
                     </button>
                 </div>
             </div>
+
+        <div class="desktop-cancel">
+            <button class="cancel-btn" type="button" onclick="cancelPayment()">
+                Cancel Payment
+            </button>
         </div>
     </section>
 
@@ -261,7 +266,7 @@
             </div>
 
             <div>
-                <button class="cancel-btn" onclick="menuClose()">
+                <button class="cancel-btn" onclick="cancelPayment()">
                     Cancel Payment 
                 </button>
             </div>
@@ -367,7 +372,7 @@
 
             <div class="mobile-btn-flex">
                 <div>
-                    <button class="cancel-btn" onclick="menuClose()">
+                    <button class="cancel-btn" onclick="cancelPayment()">
                         Cancel Payment 
                     </button>
                 </div>
@@ -389,7 +394,7 @@
 
     </section>
     
-    <script type="module" src="js/menu.js?v=3"></script>
-    <script type="module" src="js/gcash.js?v=3"></script>
+    <script type="module" src="js/menu.js?v=4"></script>
+    <script type="module" src="js/gcash.js?v=4"></script>
 </body>
 </html>

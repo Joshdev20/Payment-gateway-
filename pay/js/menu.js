@@ -12,6 +12,11 @@ function menuClose() {
     if (el) el.style.display = 'none';
 }
 
+/* Cancel Payment: leave this method and go back to the method chooser. */
+function cancelPayment() {
+    window.location.href = 'checkout.html';
+}
+
 function menu(select) {
     if (select === 'card') {
         window.location.href = 'index.html';
@@ -31,6 +36,7 @@ function menu(select) {
 // Expose for the inline onclick handlers in the markup.
 window.menuOpen = menuOpen;
 window.menuClose = menuClose;
+window.cancelPayment = cancelPayment;
 window.menu = menu;
 
 document.querySelectorAll('#paid').forEach((btn) => {

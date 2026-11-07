@@ -12,6 +12,11 @@ function menuClose() {
     if (el) el.style.display = 'none';
 }
 
+/* Cancel Payment: leave this method and go back to the method chooser. */
+function cancelPayment() {
+    window.location.href = 'checkout.html';
+}
+
 function menu(select) {
     if (select === 'card') {
         menuClose();
@@ -30,6 +35,7 @@ function menu(select) {
 
 window.menuOpen = menuOpen;
 window.menuClose = menuClose;
+window.cancelPayment = cancelPayment;
 window.menu = menu;
 
 applyLogo();
