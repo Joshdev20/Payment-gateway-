@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Choose how you want to pay: card, GCash, PayMaya, bank transfer, wallet or WU/MG.">
+<title>Payout | Choose how to pay</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+:root{
+  --brand-700:#065f46; --brand-600:#047857; --brand-500:#059669; --brand-400:#10b981;
+  --brand-050:#ecfdf5;
+  --ink-900:#0b1220; --ink-700:#1f2937; --ink-500:#4b5563; --ink-400:#6b7280; --ink-300:#9ca3af;
+  --line:#e5e7eb; --line-soft:#eef1f5;
+  --surface:#ffffff; --surface-2:#f8fafc; --canvas:#f1f5f9;
+  --radius-lg:20px; --radius-md:12px; --radius-sm:10px;
+  --shadow-card:0 1px 2px rgba(16,24,40,.04),0 24px 48px -24px rgba(16,24,40,.18);
+}
+*,*::before,*::after{box-sizing:border-box}
+body{
+  margin:0;min-height:100vh;background:var(--canvas);color:var(--ink-700);
+  font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;
+  -webkit-font-smoothing:antialiased;
+  background-image:
+    radial-gradient(900px 460px at 10% -10%,rgba(5,150,105,.12),transparent 62%),
+    radial-gradient(760px 420px at 100% 0%,rgba(37,99,235,.09),transparent 58%);
+  background-attachment:fixed;
+}
+a{color:inherit}
+.shell{width:min(920px,92%);margin:0 auto;padding:34px 0 64px}
+
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:44px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+.brand .mark{
+  width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(160deg,var(--brand-500),var(--brand-700));
+  box-shadow:0 6px 16px -6px rgba(5,150,105,.75);
+}
+.brand .mark svg{width:18px;height:18px;fill:#fff}
+.brand b{font-size:16.5px;font-weight:800;letter-spacing:-.01em;color:var(--ink-900)}
+.back{
+  display:inline-flex;align-items:center;gap:7px;text-decoration:none;
+  font-size:13.5px;font-weight:600;color:var(--ink-500);
+  padding:9px 14px;border:1px solid var(--line);border-radius:var(--radius-sm);background:#fff;
+  transition:border-color .16s ease,color .16s ease,transform .16s ease;
+}
+.back:hover{border-color:var(--brand-400);color:var(--brand-600);transform:translateY(-1px)}
+
+.head{text-align:center;max-width:56ch;margin:0 auto 38px}
+.head .step{
+  display:inline-block;background:var(--brand-050);color:var(--brand-700);
+  border:1px solid rgba(5,150,105,.22);padding:5px 12px;border-radius:999px;
+  font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:18px;
+}
+.head h1{font-size:clamp(27px,3.4vw,38px);font-weight:800;letter-spacing:-.03em;color:var(--ink-900);margin:0 0 12px}
+.head p{margin:0;color:var(--ink-500);font-size:15.5px;line-height:1.7}
+
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.card{
+  display:flex;flex-direction:column;gap:14px;text-decoration:none;
+  background:#fff;border:1px solid var(--line);border-radius:var(--radius-lg);
+  padding:22px;box-shadow:var(--shadow-card);
+  transition:transform .16s ease,border-color .16s ease,box-shadow .16s ease;
+}
+.card:hover{transform:translateY(-3px);border-color:var(--brand-400)}
+.card:focus-visible{outline:none;box-shadow:0 0 0 4px rgba(5,150,105,.22)}
+.card .ico{
+  width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;
+  background:var(--brand-050);
+}
+.card .ico svg{width:22px;height:22px;fill:var(--brand-600)}
+.card .txt{flex:1}
+.card h2{margin:0 0 5px;font-size:15.5px;font-weight:700;color:var(--ink-900);letter-spacing:-.01em}
+.card p{margin:0;font-size:13px;line-height:1.6;color:var(--ink-400)}
+.card .go{
+  display:flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:var(--brand-600);
+}
+.card .go svg{width:15px;height:15px;fill:var(--brand-600);transition:transform .16s ease}
+.card:hover .go svg{transform:translateX(3px)}
+.badge{
+  display:inline-block;margin-left:7px;padding:2px 7px;border-radius:999px;
+  background:linear-gradient(135deg,#f43f5e,#e11d48);color:#fff;
+  font-size:9.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;vertical-align:middle;
+}
+
+.note{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  margin-top:32px;color:var(--ink-400);font-size:12.5px;text-align:center;
+}
+.note svg{width:14px;height:14px;flex:0 0 14px;fill:var(--brand-500)}
+
+@media (max-width:860px){ .grid{grid-template-columns:repeat(2,1fr)} }
+@media (max-width:560px){
+  .shell{padding:24px 0 48px}
+  .topbar{margin-bottom:32px}
+  .grid{grid-template-columns:1fr}
+  .card{padding:18px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{transition-duration:.001ms!important}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+  <div class="topbar">
+    <a class="brand" href="../">
+      <span class="mark">
+        <svg viewBox="0 0 24 24"><path d="M12 1 3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4Zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8Z"/></svg>
+      </span>
+      <b>Payout</b>
+    </a>
+    <a class="back" href="../">
+      <svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:currentColor"><path d="M20 11H7.8l5.6-5.6L12 4l-8 8 8 8 1.4-1.4L7.8 13H20v-2Z"/></svg>
+      Back
+    </a>
+  </div>
+
+  <div class="head">
+    <span class="step">Step 1 of 3</span>
+    <h1>How would you like to pay?</h1>
+    <p>Pick a method to see the payment details. You can switch at any time.</p>
+  </div>
+
+  <div class="grid">
+    <a class="card" href="index.html">
+      <span class="ico">
+        <svg viewBox="0 0 24 24"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 14H4v-6h16v6Zm0-10H4V6h16v2Z"/></svg>
+      </span>
+      <span class="txt">
+        <h2>Pay with card</h2>
+        <p>Visa, Mastercard and other major cards.</p>
+      </span>
+      <span class="go">Continue
+        <svg viewBox="0 0 24 24"><path d="M12 4l-1.4 1.4L16.2 11H4v2h12.2l-5.6 5.6L12 20l8-8-8-8Z"/></svg>
+      </span>
+    </a>
+
+    <a class="card" href="gcash.html">
+      <span class="ico">
+        <svg viewBox="0 0 24 24"><path d="M12 3 2 8v2h20V8L12 3ZM4 12v6H2v2h20v-2h-2v-6h-2v6h-3v-6h-2v6H9v-6H7v6H4v-6Z"/></svg>
+      </span>
+      <span class="txt">
+        <h2>GCash</h2>
+        <p>Send to a GCash number.</p>
+      </span>
+      <span class="go">Continue
+        <svg viewBox="0 0 24 24"><path d="M12 4l-1.4 1.4L16.2 11H4v2h12.2l-5.6 5.6L12 20l8-8-8-8Z"/></svg>
+      </span>
+    </a>
+
+    <a class="card" href="paymaya.html">
+      <span class="ico">
+        <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm1 15.9V19h-2v-1.1a5 5 0 0 1-4-4.4h2a3 3 0 0 0 6 0c0-1.3-1.3-1.8-2.8-2.3C10.5 10.6 9 10 9 8a4 4 0 0 1 2-3.4V3.5h2v1.1A4.5 4.5 0 0 1 17 9h-2a2.5 2.5 0 0 0-5 0c0 1.1 1.1 1.6 2.6 2.1C14.2 11.7 16 12.4 16 15a4 4 0 0 1-3 3.9Z"/></svg>
+      </span>
+      <span class="txt">
+        <h2>PayMaya<span class="badge">New</span></h2>
+        <p>Send to a PayMaya number.</p>
+      </span>
+      <span class="go">Continue
+        <svg viewBox="0 0 24 24"><path d="M12 4l-1.4 1.4L16.2 11H4v2h12.2l-5.6 5.6L12 20l8-8-8-8Z"/></svg>
+      </span>
+    </a>
+
+    <a class="card" href="transfer.html">
+      <span class="ico">
+        <svg viewBox="0 0 24 24"><path d="M12 2 2 7v2h20V7L12 2Zm-7 9v7H3v2h18v-2h-2v-7h-2v7h-3v-7h-2v7H8v-7H5Z"/></svg>
+      </span>
+      <span class="txt">
+        <h2>Bank transfer</h2>
+        <p>Send to a bank account.</p>
+      </span>
+      <span class="go">Continue
+        <svg viewBox="0 0 24 24"><path d="M12 4l-1.4 1.4L16.2 11H4v2h12.2l-5.6 5.6L12 20l8-8-8-8Z"/></svg>
+      </span>
+    </a>
+
+    <a class="card" href="bitcoin.html">
+      <span class="ico">
+        <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm0 3.5L15.5 10h-2v4h-3v-4h-2L12 5.5ZM8 16h8v2H8v-2Z"/></svg>
+      </span>
+      <span class="txt">
+        <h2>Wallet</h2>
+        <p>Pay with crypto or an e-wallet.</p>
+      </span>
+      <span class="go">Continue
+        <svg viewBox="0 0 24 24"><path d="M12 4l-1.4 1.4L16.2 11H4v2h12.2l-5.6 5.6L12 20l8-8-8-8Z"/></svg>
+      </span>
+    </a>
+
+    <a class="card" href="wumg.html">
+      <span class="ico">
+        <svg viewBox="0 0 24 24"><path d="M4 4h16v2H4V4Zm0 5h16v2H4V9Zm0 5h10v2H4v-2Zm0 5h7v2H4v-2Z"/></svg>
+      </span>
+      <span class="txt">
+        <h2>WU / MG</h2>
+        <p>Western Union or MoneyGram.</p>
+      </span>
+      <span class="go">Continue
+        <svg viewBox="0 0 24 24"><path d="M12 4l-1.4 1.4L16.2 11H4v2h12.2l-5.6 5.6L12 20l8-8-8-8Z"/></svg>
+      </span>
+    </a>
+  </div>
+
+  <div class="note">
+    <svg viewBox="0 0 24 24"><path d="M12 1a5 5 0 0 0-5 5v3H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-1V6a5 5 0 0 0-5-5Zm-3 8V6a3 3 0 1 1 6 0v3H9Z"/></svg>
+    Already paid? <a href="upload-ss.html" style="color:var(--brand-600);font-weight:600;text-decoration:none">Upload your receipt</a>
+  </div>
+</div>
+</body>
+</html>
