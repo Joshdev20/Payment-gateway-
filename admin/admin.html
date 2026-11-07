@@ -6,7 +6,7 @@
     <title>
         Payout
     </title>
-    <link rel="stylesheet" href="css/style.css?v=5">
+    <link rel="stylesheet" href="css/style.css?v=6">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
 </head>
 <body>
@@ -107,6 +107,13 @@
             <span>Telegram relay</span>
             <span class="bs-pill" id="bsTelegram">checking</span>
         </div>
+        <div class="bs-row">
+            <span>Settings sync</span>
+            <span class="bs-pill" id="bsSync">checking</span>
+        </div>
+        <div class="bs-actions">
+            <button type="button" id="syncNow">Sync now</button>
+        </div>
     </div>
 
     <div class="upload-container" onclick="document.getElementById('fileInput').click()">
@@ -119,7 +126,7 @@
 <!-- Display uploaded logo -->
 <img id="logoDisplay" src="" alt="Logo" width="150">
 
-<script type="module" src="js/menu.js?v=5"></script>
+<script type="module" src="js/menu.js?v=6"></script>
 
 </body>
 </html>

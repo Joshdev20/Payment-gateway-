@@ -1,19 +1,54 @@
-/* Admin — GCash details. Saves to this browser's localStorage (../js/store.js). */
+/* Admin — gcash. Saved through ../js/store.js: to this browser, and to the
+   shared backend when one is configured. */
 
-import { patch, requireAdmin } from '../../js/store.js';
+import { patch, get, requireAdmin, hydrate } from '../../js/store.js';
 
 requireAdmin();
 
-/* Confirm, then return to the dashboard. Navigation does not wait on the
+/* Report a real result. When a backend is configured but rejected the write,
+   say so plainly instead of claiming success. Navigation does not wait on the
    dialog, so it still works if the popup library is slow or blocked. */
-const saved = (msg) => {
+const saved = (msg, res) => {
+    const failed = res && res.remote && !res.synced;
     if (typeof window.Swal !== 'undefined') {
-        window.Swal.fire({ title: 'Success', text: msg, icon: 'success', timer: 1200, showConfirmButton: false });
+        window.Swal.fire({
+            title: failed ? 'Saved locally' : 'Success',
+            text: failed ? 'The shared backend did not accept this change.' : msg,
+            icon: failed ? 'warning' : 'success',
+            timer: failed ? 2600 : 1200,
+            showConfirmButton: false,
+        });
     }
     window.location.href = 'admin.html';
 };
 
-document.querySelector('#editBtn').addEventListener('click', function (e) {
+const busy = (on) => {
+    const btn = document.querySelector('#editBtn');
+    if (!btn) return;
+    btn.disabled = on;
+    btn.style.opacity = on ? '.65' : '';
+};
+
+/* Show the values currently in effect, including any loaded from the backend. */
+hydrate().then(() => {
+    const d = get('gcash') || {};
+    {
+        const el = document.querySelector('#gcashAcctName');
+        if (el) el.value = d.gcashName ?? '';
+    }
+    {
+        const el = document.querySelector('#gcashAcctNum');
+        if (el) el.value = d.gcashNumber ?? '';
+    }
+    {
+        const el = document.querySelector('#gcashCurrency');
+        if (el) el.value = d.gcashCurrency ?? '';
+    }
+    {
+        const el = document.querySelector('#gcashAmount');
+        if (el) el.value = d.gcashAmount ?? '';
+    }});
+document.querySelector('#editBtn').addEventListener('click', async function (e) {
     e.preventDefault();
 
     const gcashName = document.querySelector('#gcashAcctName').value.trim();
@@ -27,6 +62,7 @@ document.querySelector('#editBtn').addEventListener('click', function (e) {
         return;
     }
 
-    patch('gcash', { gcashName, gcashNumber, gcashCurrency, gcashAmount });
-    saved('Gcash account details saved');
+    busy(true);
+    const res = await patch('gcash', { gcashName, gcashNumber, gcashCurrency, gcashAmount });
+    saved('Gcash account details saved', res);
 });

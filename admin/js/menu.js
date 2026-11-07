@@ -1,7 +1,10 @@
-/* Admin dashboard. Guards the page, fills in the operator name and wires the
-   section links and logo upload. Browser-side only. */
+/* Admin dashboard. Guards the page, fills in the operator name, wires the
+   section links and logo upload, and reports the state of the shared backend. */
 
-import { menuNav, applyLogo, setLogo, currentUser, requireAdmin, notify, backendStatus } from '../../js/store.js';
+import {
+    menuNav, applyLogo, setLogo, currentUser, requireAdmin, notify,
+    backendStatus, hydrate, lastSync,
+} from '../../js/store.js';
 
 function menu(select) {
     menuNav(select, 'admin');
@@ -13,8 +16,6 @@ requireAdmin();
 
 const userEl = document.querySelector('#user');
 if (userEl) userEl.textContent = currentUser();
-
-applyLogo();
 
 const fileInput = document.getElementById('fileInput');
 if (fileInput) {
@@ -28,9 +29,11 @@ if (fileInput) {
                 reader.onload = () => resolve(reader.result);
                 reader.onerror = reject;
             });
-            setLogo(dataUrl);
+            const res = await setLogo(dataUrl);
             applyLogo();
-            notify('Success', 'Logo saved', 'success');
+            notify(res.remote && !res.synced ? 'Warning' : 'Success',
+                   res.remote && !res.synced ? 'Logo saved locally only' : 'Logo saved',
+                   res.remote && !res.synced ? 'warning' : 'success');
         } catch (err) {
             console.error(err);
             notify('Error', 'Could not read that image', 'error');
@@ -38,11 +41,58 @@ if (fileInput) {
     });
 }
 
-/* Show which optional backends are configured. */
-const status = backendStatus();
-for (const [id, on] of [['bsSupabase', status.supabase], ['bsTelegram', status.telegram]]) {
+const pill = (id, text, tone) => {
     const el = document.getElementById(id);
-    if (!el) continue;
-    el.textContent = on ? 'configured' : 'not configured';
-    el.className = `bs-pill ${on ? 'on' : 'off'}`;
+    if (!el) return;
+    el.textContent = text;
+    el.className = `bs-pill ${tone}`;
+};
+
+/* Backends: report the configuration first, then the live result of a pull. */
+const status = backendStatus();
+pill('bsSupabase', status.supabase ? 'configured' : 'not configured',
+     status.supabase ? 'on' : 'off');
+pill('bsTelegram', status.telegram ? 'configured' : 'not configured',
+     status.telegram ? 'on' : 'off');
+
+function paintSync(ok) {
+    const s = lastSync();
+    const when = s.at ? new Date(s.at).toLocaleTimeString() : '';
+    pill('bsSync', ok ? `synced ${when}` : 'not reachable', ok ? 'on' : 'off');
+}
+
+if (status.supabase) {
+    hydrate().then((ok) => {
+        paintSync(ok);
+        applyLogo();
+        if (ok) notify('Sync', 'Settings loaded from the shared backend', 'success');
+    });
+} else {
+    paintSync(false);
+    resetLogo();
+}
+
+function resetLogo() {
+    const el = document.getElementById('logoDisplay');
+    if (el) el.setAttribute('src', '');
+}
+
+/* Pull again on demand. */
+const syncBtn = document.getElementById('syncNow');
+if (syncBtn) {
+    if (!status.supabase) syncBtn.disabled = true;
+    syncBtn.addEventListener('click', async () => {
+        if (!status.supabase) return;
+        syncBtn.disabled = true;
+        syncBtn.textContent = 'Syncing\u2026';
+        const ok = await hydrate();
+        paintSync(ok);
+        applyLogo();
+        syncBtn.textContent = 'Sync now';
+        syncBtn.disabled = false;
+        notify(ok ? 'Sync' : 'Error',
+               ok ? 'Settings refreshed from the shared backend'
+                  : 'Could not reach the shared backend',
+               ok ? 'success' : 'error');
+    });
 }

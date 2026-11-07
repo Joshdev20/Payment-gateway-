@@ -1,6 +1,6 @@
 /* Card checkout page. */
 
-import { applyLogo } from '../../js/store.js';
+import { applyLogo, hydrate } from '../../js/store.js';
 
 function menuOpen() {
     const el = document.querySelector('#menu');
@@ -38,4 +38,4 @@ window.menuClose = menuClose;
 window.cancelPayment = cancelPayment;
 window.menu = menu;
 
-applyLogo();
+hydrate().then(applyLogo);

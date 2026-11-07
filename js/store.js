@@ -84,15 +84,17 @@ export function get(section) {
 }
 
 /* Replace a whole section, e.g. save('gcash', {...}). */
-export function save(section, value) {
+export async function save(section, value) {
     const state = read();
     state[section] = value;
     write(state);
-    return value;
+    const synced = await pushToSupabase(section, value);
+    noteSync(synced);
+    return { value, synced, remote: supabaseConfigured() };
 }
 
 /* Merge into a section, keeping fields the form did not submit. */
-export function patch(section, value) {
+export async function patch(section, value) {
     const state = read();
     const current = state[section];
     state[section] =
@@ -100,8 +102,12 @@ export function patch(section, value) {
             ? { ...current, ...value }
             : value;
     write(state);
-    mirrorToSupabase(section, state[section]);
-    return state[section];
+
+    // Wait for the backend when one is configured, so the caller can report a
+    // real result. With no backend this resolves immediately.
+    const synced = await pushToSupabase(section, state[section]);
+    noteSync(synced);
+    return { value: state[section], synced, remote: supabaseConfigured() };
 }
 
 export function reset() {
@@ -118,11 +124,13 @@ export function getLogo() {
     return read().logo || '';
 }
 
-export function setLogo(dataUrl) {
+export async function setLogo(dataUrl) {
     const state = read();
     state.logo = dataUrl;
     write(state);
-    return dataUrl;
+    const synced = await pushToSupabase('logo', dataUrl);
+    noteSync(synced);
+    return { value: dataUrl, synced, remote: supabaseConfigured() };
 }
 
 /* Paint the saved logo into every #logo / #logoDisplay image on the page. */
@@ -145,13 +153,42 @@ export function applyLogo() {
    Every call is wrapped, so an unconfigured or unreachable backend never
    blocks the UI. */
 
-async function mirrorToSupabase(section, value) {
+/* Sends a section to Supabase. Resolves to true when it was written, false
+   when no backend is configured or the write failed. */
+async function pushToSupabase(section, value) {
+    const client = await getSupabase();
+    if (!client) return false;
     try {
-        const client = await getSupabase();
-        if (!client) return;
-        await client.from('settings').upsert({ id: section, value });
+        const { error } = await client
+            .from('settings')
+            .upsert({ id: section, value }, { onConflict: 'id' });
+        if (error) throw error;
+        return true;
     } catch (err) {
-        console.warn('Supabase write skipped:', err && err.message);
+        console.warn('Supabase write failed:', err && err.message);
+        return false;
+    }
+}
+
+/* Pulls every row back into localStorage. Returns true when the backend was
+   reachable and answered, false otherwise, so callers can fall back. */
+async function pullFromSupabase() {
+    const client = await getSupabase();
+    if (!client) return false;
+    try {
+        const { data, error } = await client.from('settings').select('id,value');
+        if (error) throw error;
+        if (!Array.isArray(data)) return false;
+
+        const state = read();
+        for (const row of data) {
+            if (row && row.id) state[row.id] = row.value;
+        }
+        write(state);
+        return true;
+    } catch (err) {
+        console.warn('Supabase read failed:', err && err.message);
+        return false;
     }
 }
 
@@ -170,6 +207,25 @@ async function relayToTelegram(text) {
     }
 }
 
+/* Load the shared settings before a page renders. Payment pages call this so
+   Supabase is the source of truth and every visitor sees the same details.
+   Resolves false when no backend is configured or it cannot be reached, in
+   which case the localStorage copy is already in place and rendering goes on
+   with it. */
+export async function hydrate() {
+    if (!supabaseConfigured()) return false;
+    return pullFromSupabase();
+}
+
+/* ---- Sync status, for the admin dashboard ---- */
+let syncState = { at: null, synced: false, remote: false };
+export function lastSync() {
+    return syncState;
+}
+function noteSync(synced) {
+    syncState = { at: new Date().toISOString(), synced, remote: supabaseConfigured() };
+}
+
 export function backendStatus() {
     return {
         supabase: supabaseConfigured(),
@@ -178,7 +234,7 @@ export function backendStatus() {
 }
 
 /* ---- Receipts ----------------------------------------------------------- */
-export function addReceipt({ name, email, image }) {
+export async function addReceipt({ name, email, image }) {
     const state = read();
     const receipt = {
         id: `rcpt_${Date.now().toString(36)}${Math.random().toString(36).slice(2, 7)}`,
@@ -189,11 +245,12 @@ export function addReceipt({ name, email, image }) {
     };
     state.receipts = [receipt, ...(state.receipts || [])].slice(0, 25);
     write(state);
-    mirrorToSupabase('receipts', state.receipts);
+    const synced = await pushToSupabase('receipts', state.receipts);
+    noteSync(synced);
     relayToTelegram(
         `New receipt\nName: ${name}\nEmail: ${email}\nAt: ${receipt.at}`
     );
-    return receipt;
+    return { receipt, synced, remote: supabaseConfigured() };
 }
 
 export function getReceipts() {

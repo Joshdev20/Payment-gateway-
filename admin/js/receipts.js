@@ -1,6 +1,6 @@
 /* Admin — receipts submitted from the upload page, stored in this browser. */
 
-import { getReceipts, requireAdmin } from '../../js/store.js';
+import { getReceipts, requireAdmin, hydrate } from '../../js/store.js';
 
 requireAdmin();
 
@@ -54,4 +54,5 @@ function render() {
     });
 }
 
-render();
+/* Pull shared settings first, so receipts uploaded elsewhere appear here. */
+hydrate().then(render);

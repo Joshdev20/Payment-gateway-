@@ -1,6 +1,6 @@
 /* GCash payment page. Reads the details the admin saved in this browser. */
 
-import { get, applyLogo, enableCopy, orDash } from '../../js/store.js';
+import { get, applyLogo, enableCopy, orDash, hydrate } from '../../js/store.js';
 
 function render() {
     const d = get('gcash') || {};
@@ -11,5 +11,8 @@ function render() {
     applyLogo();
 }
 
-render();
+/* Pull shared settings first, then paint. If no backend is configured
+   hydrate() resolves immediately and the local copy renders as before. */
+hydrate().then(render);
+
 enableCopy();

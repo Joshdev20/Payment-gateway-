@@ -288,3 +288,20 @@ textarea { text-align: left; height: 130px; resize: vertical; }
 }
 .bs-pill.on { background: #ecfdf5; color: var(--brand-700); }
 .bs-pill.off { background: #f1f5f9; color: var(--ink-400); }
+
+.backend-status .bs-actions { margin-top: 12px; }
+.backend-status .bs-actions button {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    color: var(--ink-500);
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: border-color .16s ease, color .16s ease;
+}
+.backend-status .bs-actions button:hover { border-color: var(--brand-500); color: var(--brand-600); }
+.backend-status .bs-actions button:disabled { opacity: .6; cursor: default; }

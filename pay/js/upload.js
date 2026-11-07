@@ -31,7 +31,7 @@ if (fileInput) {
 
 const form = document.getElementById('paymentForm');
 if (form) {
-    form.addEventListener('submit', function (e) {
+    form.addEventListener('submit', async function (e) {
         e.preventDefault();
 
         if (!selectedFile) {
@@ -47,14 +47,19 @@ if (form) {
             return;
         }
 
-        addReceipt({ name: userName, email: userEmail, image: previewUrl });
+        // Wait for the write before leaving the page, so a configured backend
+        // actually receives it.
+        const res = await addReceipt({ name: userName, email: userEmail, image: previewUrl });
+        const localOnly = res.remote && !res.synced;
 
         if (typeof window.Swal !== 'undefined') {
             window.Swal.fire({
-                title: 'Receipt saved',
-                text: 'Open the admin dashboard to review it.',
-                icon: 'success',
-                timer: 1400,
+                title: localOnly ? 'Saved locally' : 'Receipt saved',
+                text: localOnly
+                    ? 'The shared backend did not accept it. Try again from the dashboard.'
+                    : 'Open the admin dashboard to review it.',
+                icon: localOnly ? 'warning' : 'success',
+                timer: localOnly ? 2200 : 1400,
                 showConfirmButton: false,
             });
         }
