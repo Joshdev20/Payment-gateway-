@@ -1,25 +1,26 @@
-const userAdmin = 'Bigtools';
-const userPass = 'Zeatan02,,';
+/* Admin login. Credentials come from the shared store so this file and the
+   dashboard guard can never disagree. Browser-side only. */
 
-const storeUser = localStorage.getItem('user');
-const storePass = localStorage.getItem('password');
+import { signIn, notify, ADMIN } from '../../js/store.js';
 
-// Pre-fill input if you want
-document.querySelector('#user').value = storeUser || '';
-document.querySelector('#password').value = storePass || '';
+const userField = document.querySelector('#user');
+const passField = document.querySelector('#password');
 
-// Check login
-document.querySelector('form').addEventListener('submit', function(e) {
+userField.value = '';
+passField.value = '';
+
+document.querySelector('form').addEventListener('submit', function (e) {
     e.preventDefault();
 
-    const userInput = document.querySelector('#user').value;
-    const passInput = document.querySelector('#password').value;
+    const user = userField.value.trim();
+    const pass = passField.value;
 
-    if(userAdmin === userInput && userPass === passInput) {
-        localStorage.setItem('user', userInput);
-        localStorage.setItem('password', passInput);
+    if (signIn(user, pass)) {
         window.location.href = 'admin.html';
     } else {
-        alert('Incorrect username or password');
+        notify('Incorrect username or password', '', 'error');
     }
 });
+
+/* Small convenience so the demo is easy to open. */
+console.info(`Demo admin login — user: ${ADMIN.user}  password: ${ADMIN.pass}`);

@@ -1,49 +1,33 @@
+/* Admin — bank transfer details. Saves to this browser's localStorage (../js/store.js). */
 
+import { patch, requireAdmin } from '../../js/store.js';
 
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
- 
-const supabaseUrl = "https://eyrjnunkjivuzgquaseo.supabase.co";
-const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5cmpudW5raml2dXpncXVhc2VvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYxNDE0NzcsImV4cCI6MjA3MTcxNzQ3N30.nuRyARA-wDx0FoiLTBmxX3MC5XJoqgti6yTFAt5JKtQ"; // replace with your anon key
-const supabase = createClient(supabaseUrl, supabaseKey);
+requireAdmin();
 
-document.querySelector('#editBtn').addEventListener('click', async function(e) {
+/* Confirm, then return to the dashboard. Navigation does not wait on the
+   dialog, so it still works if the popup library is slow or blocked. */
+const saved = (msg) => {
+    if (typeof window.Swal !== 'undefined') {
+        window.Swal.fire({ title: 'Success', text: msg, icon: 'success', timer: 1200, showConfirmButton: false });
+    }
+    window.location.href = 'admin.html';
+};
+
+document.querySelector('#editBtn').addEventListener('click', function (e) {
     e.preventDefault();
 
+    const tBankName = document.querySelector('#tBankName').value.trim();
     const tAcctName = document.querySelector('#tAcctName').value.trim();
-    const tAcctNum = document.querySelector('#tAcctNum').value.trim();
+    const tAcctNumber = document.querySelector('#tAcctNum').value.trim();
     const tCurrency = document.querySelector('#tCurrency').value.trim();
     const tAmount = document.querySelector('#tAmount').value.trim();
-    const tBankName = document.querySelector('#tBankName').value.trim();
 
-    if (!tAcctName || !tAcctNum || !tCurrency || !tAmount || !tBankName) {
-        Swal.fire("Error", "All fields are required", "error");
+    if (!tBankName || !tAcctName || !tAcctNumber || !tCurrency || !tAmount) {
+        if (typeof window.Swal !== 'undefined') window.Swal.fire('Error', 'All fields are required', 'error');
+        else window.alert('All fields are required');
         return;
     }
 
-    try {
-        const { data, error } = await supabase
-            .from('transfer')
-            .upsert(
-                {
-                    tAcctName: tAcctName,
-                    tAcctNumber: tAcctNum,
-                    tCurrency: tCurrency,
-                    tAmount: tAmount,
-                    tBankName: tBankName
-                },
-                { onConflict: 'tAcctNumber' } // must match UNIQUE column
-            );
-
-        if (error) throw error;
-
-        console.log("✅ Supabase saved:", data);
-
-        Swal.fire("Success", "Bank transfer Account Details Uploaded", "success").then(() => {
-            window.location.href = 'admin.html';
-        });
-
-    } catch (err) {
-        console.error("❌ Supabase Error:", err);
-        Swal.fire("Error", "Failed to save Bank transfer account", "error");
-    }
+    patch('transfer', { tBankName, tAcctName, tAcctNumber, tCurrency, tAmount });
+    saved('Bank transfer account details saved');
 });

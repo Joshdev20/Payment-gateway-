@@ -1,67 +1,36 @@
+/* Western Union / MoneyGram payment page. Reads the details the admin saved. */
 
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+import { get, applyLogo, enableCopy, orDash } from '../../js/store.js';
 
-// Supabase config
-const supabaseUrl = "https://eyrjnunkjivuzgquaseo.supabase.co";
-const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5cmpudW5raml2dXpncXVhc2VvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYxNDE0NzcsImV4cCI6MjA3MTcxNzQ3N30.nuRyARA-wDx0FoiLTBmxX3MC5XJoqgti6yTFAt5JKtQ";
-const supabase = createClient(supabaseUrl, supabaseKey);
-
-async function loadWallets() {
-  try {
-    const { data, error } = await supabase
-      .from("wumg")
-      .select("*")
-      .order("created_at", { ascending: false })
-      .limit(1); // ✅ only latest row
-
-    if (error) throw error;
-    if (!data || data.length === 0) {
-      console.warn("⚠️ No data found in Supabase");
-      return;
-    }
-
-    const row = data[0]; // get the latest wallet row
-
-    // ✅ Select all elements (desktop + mobile)
-    const wuCurrencyEls = document.querySelectorAll(".js-wuCurrency");
-    const wuDetailsEls = document.querySelectorAll(".js-wuDetails");
-    const payWithEls = document.querySelectorAll(".js-wuPaywith");
-    const wuAmountEls = document.querySelectorAll(".js-wuAmount");
-
-    // ✅ Apply same value to all matching elements
-    wuCurrencyEls.forEach(el => el.textContent = row.wuCurrency);
-    wuDetailsEls.forEach(el => el.textContent = row.wuDetails);
-    payWithEls.forEach(el => el.textContent = row.payWith);
-    wuAmountEls.forEach(el => el.textContent = row.wuAmount);
-
-    console.log("✅ Data loaded:", row);
-  } catch (err) {
-    console.error("❌ Supabase Error:", err.message);
-  }
-}
-
-loadWallets();
-
-// Load logo from Supabase and apply to all logo elements
-export async function loadLogo() {
-    try {
-        const { data, error } = await supabase
-            .from('logo')
-            .select('*')
-            .limit(1); // latest row
-
-        if (error) throw error;
-
-        if (data && data.length > 0) {
-            const logoEls = document.querySelectorAll('#logo'); // select all elements with class "logo"
-            logoEls.forEach(el => {
-                el.src = data[0].logo;
+function render() {
+    const d = get('wumg') || {};
+    document.querySelectorAll('.js-wuCurrency').forEach((el) => { el.textContent = orDash(d.wuCurrency); });
+    document.querySelectorAll('.js-wuAmount').forEach((el) => { el.textContent = orDash(d.wuAmount); });
+    document.querySelectorAll('.js-wuPaywith').forEach((el) => { el.textContent = orDash(d.payWith); });
+    document.querySelectorAll('.js-wuDetails').forEach((el) => {
+        el.innerHTML = '';
+        String(d.wuDetails || '')
+            .split('\n')
+            .map((line) => line.trim())
+            .filter(Boolean)
+            .forEach((line) => {
+                const [label, ...rest] = line.split(':');
+                const row = document.createElement('div');
+                row.className = 'con-flex';
+                const left = document.createElement('div');
+                const lab = document.createElement('div');
+                lab.className = 'con-label';
+                lab.textContent = rest.length ? label.trim() : '';
+                const val = document.createElement('div');
+                val.className = 'con-value';
+                val.textContent = rest.length ? rest.join(':').trim() : line;
+                left.append(lab, val);
+                row.append(left, document.createElement('div'));
+                el.append(row);
             });
-        }
-    } catch (err) {
-        console.error("❌ Supabase Error:", err);
-    }
+    });
+    applyLogo();
 }
 
-// Call on page load after DOM is ready
-document.addEventListener('DOMContentLoaded', loadLogo);
+render();
+enableCopy();

@@ -1,50 +1,48 @@
-import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+/* Admin — wallet address and QR. Saves to this browser's localStorage (../js/store.js).
+   The QR image is stored as a data URL so the payment page can show it. */
 
-    // ✅ Replace with your real Supabase URL & Anon Key
-    const supabase = createClient(
-      "https://eyrjnunkjivuzgquaseo.supabase.co",
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5cmpudW5raml2dXpncXVhc2VvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYxNDE0NzcsImV4cCI6MjA3MTcxNzQ3N30.nuRyARA-wDx0FoiLTBmxX3MC5XJoqgti6yTFAt5JKtQ"
-    );
+import { patch, requireAdmin } from '../../js/store.js';
 
-    document.querySelector('#editBtn').addEventListener('click', async function(e) {
-      e.preventDefault();
+requireAdmin();
 
-      const address = document.querySelector('#address').value.trim();
-      const amount = document.querySelector('#amount').value.trim();
-      const wallet = document.querySelector('#wallet').value.trim();
-      const qrFile = document.querySelector('#qrImage').files[0];
+/* Confirm, then return to the dashboard. Navigation does not wait on the
+   dialog, so it still works if the popup library is slow or blocked. */
+const saved = (msg) => {
+    if (typeof window.Swal !== 'undefined') {
+        window.Swal.fire({ title: 'Success', text: msg, icon: 'success', timer: 1200, showConfirmButton: false });
+    }
+    window.location.href = 'admin.html';
+};
 
-      if (!qrFile) {
-        Swal.fire("Error", "Please upload a QR image", "error");
+const toBase64 = (file) => new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = (err) => reject(err);
+});
+
+document.querySelector('#editBtn').addEventListener('click', async function (e) {
+    e.preventDefault();
+
+    const address = document.querySelector('#address').value.trim();
+    const amount = document.querySelector('#amount').value.trim();
+    const wallet = document.querySelector('#wallet').value;
+    const qrFile = document.querySelector('#qrImage').files[0];
+
+    if (!address || !amount || !wallet) {
+        if (typeof window.Swal !== 'undefined') window.Swal.fire('Error', 'All fields are required', 'error');
+        else window.alert('All fields are required');
         return;
-      }
+    }
 
-      // ✅ Convert image file → Base64 string
-      const toBase64 = file => new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = error => reject(error);
-      });
-
-      try {
-        const qrBase64 = await toBase64(qrFile);
-
-        // ✅ Insert everything into Supabase table
-        const { data: inserted, error } = await supabase
-          .from("wallets")
-          .insert([{ address, amount, wallet, qrImage: qrBase64 }]);
-
-        if (error) throw error;
-
-        console.log("✅ Saved to Supabase:", inserted);
-
-        Swal.fire("Success", "New Wallet Uploaded", "success").then(() => {
-          window.location.href = 'admin.html';
-        });
-
-      } catch (err) {
-        console.error("❌ Supabase Error:", err);
-        Swal.fire("Error", "Failed to save wallet", "error");
-      }
-    });
+    try {
+        const update = { address, amount, wallet };
+        if (qrFile) update.qrImage = await toBase64(qrFile);
+        patch('wallet', update);
+        saved('Wallet details saved');
+    } catch (err) {
+        console.error(err);
+        if (typeof window.Swal !== 'undefined') window.Swal.fire('Error', 'Could not read that image', 'error');
+        else window.alert('Could not read that image');
+    }
+});

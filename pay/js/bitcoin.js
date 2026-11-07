@@ -1,98 +1,22 @@
-const copyBitBtn = document.querySelectorAll('.bi-copy');
-copyBitBtn.forEach(copy => {
-    copy.addEventListener('click', function(e) {
-    e.preventDefault();
+/* Wallet payment page. Reads the address and QR the admin saved in this browser. */
 
-    const textToCopy = document.querySelector('#send-address')?.innerText || '';
+import { get, applyLogo, enableCopy, orDash } from '../../js/store.js';
 
-    if (textToCopy) {
-        navigator.clipboard.writeText(textToCopy)
-            .then(() => {
-                alert("Copied to clipboard!");
-            })
-            .catch(err => {
-                console.error("Failed to copy: ", err);
-                alert("Failed to copy!");
-            });
-    } else {
-        alert("Nothing to copy.");
-    }
-});
-});
-
-
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
-
-// Supabase config
-const supabaseUrl = "https://eyrjnunkjivuzgquaseo.supabase.co";
-const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5cmpudW5raml2dXpncXVhc2VvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYxNDE0NzcsImV4cCI6MjA3MTcxNzQ3N30.nuRyARA-wDx0FoiLTBmxX3MC5XJoqgti6yTFAt5JKtQ";
-const supabase = createClient(supabaseUrl, supabaseKey);
-
-async function loadWallets() {
-  try {
-    const { data, error } = await supabase
-      .from("wallets")
-      .select("*")
-      .order("created_at", { ascending: false })
-      .limit(1); // ✅ only latest row
-
-    if (error) throw error;
-    if (!data || data.length === 0) {
-      console.warn("⚠️ No data found in Supabase");
-      return;
-    }
-
-    const row = data[0]; // get the latest wallet row
-
-    // ✅ Select all elements (desktop + mobile)
-    const addressEls = document.querySelectorAll(".send_address");
-    const walletEls = document.querySelectorAll(".js-wallet");
-    const amountEls = document.querySelectorAll(".js-amount");
-    const qrImageEls = document.querySelectorAll(".js-qrImage");
-
-    // ✅ Apply same value to all matching elements
-    addressEls.forEach(el => el.textContent = row.address);
-    walletEls.forEach(el => el.textContent = row.wallet);
-    amountEls.forEach(el => el.textContent = row.amount);
-
-    qrImageEls.forEach(el => {
-      if (row.qrImage) {
-        if (row.qrImage.startsWith("data:image")) {
-          el.src = row.qrImage; // already full data URI
+function render() {
+    const d = get('wallet') || {};
+    document.querySelectorAll('.js-wallet').forEach((el) => { el.textContent = orDash(d.wallet); });
+    document.querySelectorAll('.js-amount').forEach((el) => { el.textContent = orDash(d.amount); });
+    document.querySelectorAll('.send_address').forEach((el) => { el.textContent = orDash(d.address); });
+    document.querySelectorAll('.js-qrImage').forEach((el) => {
+        if (d.qrImage) {
+            el.src = d.qrImage;
+            el.style.display = '';
         } else {
-          el.src = `data:image/png;base64,${row.qrImage}`;
+            el.style.display = 'none';
         }
-      }
     });
-
-    console.log("✅ Data loaded:", row);
-  } catch (err) {
-    console.error("❌ Supabase Error:", err.message);
-  }
+    applyLogo();
 }
 
-loadWallets();
-
-// Load logo from Supabase and apply to all logo elements
-export async function loadLogo() {
-    try {
-        const { data, error } = await supabase
-            .from('logo')
-            .select('*')
-            .limit(1); // latest row
-
-        if (error) throw error;
-
-        if (data && data.length > 0) {
-            const logoEls = document.querySelectorAll('#logo'); // select all elements with class "logo"
-            logoEls.forEach(el => {
-                el.src = data[0].logo;
-            });
-        }
-    } catch (err) {
-        console.error("❌ Supabase Error:", err);
-    }
-}
-
-// Call on page load after DOM is ready
-document.addEventListener('DOMContentLoaded', loadLogo);
+render();
+enableCopy();

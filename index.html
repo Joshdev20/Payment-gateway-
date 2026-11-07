@@ -14,65 +14,92 @@
     background-image:radial-gradient(1100px 520px at 12% -8%,rgba(5,150,105,.12),transparent 60%),
                      radial-gradient(900px 480px at 100% 0%,rgba(37,99,235,.10),transparent 55%);
     background-attachment:fixed;color:#1f2937;-webkit-font-smoothing:antialiased;
+    padding:40px 0;
   }
-  .wrap{width:min(560px,90%);text-align:center;padding:24px 0}
+  .wrap{width:min(560px,90%)}
+  .brand{text-align:center;margin-bottom:30px}
   .logo{
-    width:60px;height:60px;border-radius:18px;margin:0 auto 22px;
+    width:60px;height:60px;border-radius:18px;margin:0 auto 20px;
     display:flex;align-items:center;justify-content:center;
     background:linear-gradient(160deg,#059669,#047857);
     box-shadow:0 12px 30px -12px rgba(5,150,105,.7);
   }
   .logo svg{width:30px;height:30px;fill:#fff}
   h1{font-size:30px;font-weight:800;letter-spacing:-.02em;margin:0 0 10px;color:#0b1220}
-  p.sub{margin:0 0 34px;color:#6b7280;font-size:15px;line-height:1.6}
+  p.sub{margin:0;color:#6b7280;font-size:15px;line-height:1.6}
+
+  .primary{
+    display:flex;align-items:center;gap:16px;text-decoration:none;
+    background:linear-gradient(180deg,#059669,#047857);color:#fff;
+    border-radius:18px;padding:20px 22px;margin-bottom:16px;
+    box-shadow:0 1px 2px rgba(5,150,105,.28),0 16px 32px -16px rgba(5,150,105,.65);
+    transition:transform .16s ease,filter .16s ease;
+  }
+  .primary:hover{transform:translateY(-2px);filter:brightness(1.05)}
+  .primary .ico{
+    width:46px;height:46px;flex:0 0 46px;border-radius:13px;display:flex;
+    align-items:center;justify-content:center;background:rgba(255,255,255,.18);font-size:22px;
+  }
+  .primary strong{display:block;font-size:16px;font-weight:700}
+  .primary small{display:block;font-size:12.5px;opacity:.85;margin-top:3px}
+  .primary .chev{margin-left:auto;font-size:22px;opacity:.7}
+
   .card{
     background:#fff;border:1px solid #e5e7eb;border-radius:20px;padding:10px;
     box-shadow:0 1px 2px rgba(16,24,40,.04),0 24px 48px -24px rgba(16,24,40,.18);
-    display:flex;flex-direction:column;gap:8px;text-align:left;
+    display:flex;flex-direction:column;gap:8px;
   }
   a.row{
-    display:flex;align-items:center;gap:14px;padding:16px 18px;border-radius:12px;
-    text-decoration:none;color:#1f2937;font-weight:600;font-size:15px;
+    display:flex;align-items:center;gap:14px;padding:15px 16px;border-radius:12px;
+    text-decoration:none;color:#1f2937;font-weight:600;font-size:14.5px;
     border:1px solid transparent;transition:background .16s ease,border-color .16s ease,transform .16s ease;
   }
   a.row:hover{background:#f8fafc;border-color:#e5e7eb;transform:translateY(-1px)}
-  .ico{
-    width:40px;height:40px;flex:0 0 40px;border-radius:11px;display:flex;
-    align-items:center;justify-content:center;background:#ecfdf5;color:#059669;font-size:18px;
+  .ico2{
+    width:38px;height:38px;flex:0 0 38px;border-radius:11px;display:flex;
+    align-items:center;justify-content:center;background:#ecfdf5;color:#059669;font-size:17px;
   }
-  .row small{display:block;font-weight:400;color:#9ca3af;font-size:12.5px;margin-top:2px}
   .row span.t{flex:1}
-  .chev{color:#d1d5db;font-size:18px}
-  footer{margin-top:26px;color:#9ca3af;font-size:12px}
+  .row small{display:block;font-weight:400;color:#9ca3af;font-size:12.5px;margin-top:2px}
+  .chev2{color:#d1d5db;font-size:18px}
+  footer{margin-top:22px;text-align:center;color:#9ca3af;font-size:12px;line-height:1.6}
 </style>
 </head>
 <body>
   <div class="wrap">
-    <div class="logo">
-      <svg viewBox="0 0 24 24"><path d="M12 1 3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4Zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8Z"/></svg>
+    <div class="brand">
+      <div class="logo">
+        <svg viewBox="0 0 24 24"><path d="M12 1 3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4Zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8Z"/></svg>
+      </div>
+      <h1>Payout</h1>
+      <p class="sub">Already sent your payment? Upload the receipt so it can be confirmed.</p>
     </div>
-    <h1>Payout</h1>
-    <p class="sub">Choose where you want to go.</p>
+
+    <a class="primary" href="pay/upload-ss.html">
+      <span class="ico">&#8682;</span>
+      <span>
+        <strong>Upload your receipt</strong>
+        <small>Send a screenshot of your payment</small>
+      </span>
+      <span class="chev">&#8250;</span>
+    </a>
 
     <nav class="card">
       <a class="row" href="pay/index.html">
-        <span class="ico">&#128179;</span>
-        <span class="t">Checkout<span><small>Card, GCash, PayMaya, bank transfer, wallet</small></span></span>
-        <span class="chev">&#8250;</span>
-      </a>
-      <a class="row" href="pay/upload-ss.html">
-        <span class="ico">&#8682;</span>
-        <span class="t">Upload receipt<span><small>Send proof of payment</small></span></span>
-        <span class="chev">&#8250;</span>
+        <span class="ico2">&#128179;</span>
+        <span class="t">Go to checkout<small>Card, GCash, PayMaya, bank transfer, wallet</small></span>
+        <span class="chev2">&#8250;</span>
       </a>
       <a class="row" href="admin/index.html">
-        <span class="ico">&#9881;</span>
-        <span class="t">Admin<span><small>Manage payment details</small></span></span>
-        <span class="chev">&#8250;</span>
+        <span class="ico2">&#9881;</span>
+        <span class="t">Admin panel<small>Set the payment details customers see</small></span>
+        <span class="chev2">&#8250;</span>
       </a>
     </nav>
 
-    <footer>Demo interface · no real payments are processed</footer>
+    <footer>
+      Demo project · everything stays in this browser · no real payments
+    </footer>
   </div>
 </body>
 </html>
