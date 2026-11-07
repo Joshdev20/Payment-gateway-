@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Secure checkout — PayoutFlow</title>
+  <meta name="description" content="PayoutFlow hosted checkout demo. Sandbox only — no real payment is processed.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/theme.css?v=4">
+  <link rel="stylesheet" href="assets/css/checkout.css?v=4">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%236366f1'/%3E%3Cpath d='M11 21V11h6a3.5 3.5 0 010 7h-3' stroke='white' stroke-width='2.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+</head>
+<body>
+
+<div class="checkout-shell">
+  <div class="container">
+    <header class="checkout-top">
+      <div class="merchant">
+        <span class="merchant-mark" id="merchantMark">NL</span>
+        <div>
+          <div class="merchant-name" id="merchantName">Northwind Labs</div>
+          <div class="tiny muted">Sandbox checkout · test mode</div>
+        </div>
+      </div>
+      <div class="row gap-4">
+        <span class="secure-pill">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 018 0v3"/></svg>
+          Secured by PayoutFlow
+        </span>
+        <a href="index.html" class="btn btn-ghost btn-sm">Exit</a>
+      </div>
+    </header>
+  </div>
+
+  <main class="checkout-main">
+    <div class="container">
+      <div class="checkout-grid">
+
+        <!-- ============ Summary ============ -->
+        <section class="summary">
+          <div class="summary-head">
+            <span class="eyebrow">Amount due</span>
+            <div class="summary-amount tabular" id="summaryAmount">$199.00</div>
+            <p class="small muted" id="summaryDesc">Order #1042</p>
+          </div>
+
+          <div class="card card-pad">
+            <div class="line-items">
+              <div class="line-item"><span class="muted">Subtotal</span><span class="tabular" id="lineSubtotal">$199.00</span></div>
+              <div class="line-item"><span class="muted">Processing fee (2.9% + 30¢)</span><span class="tabular muted" id="lineFee">$6.07</span></div>
+              <div class="line-total"><span>Total due</span><span class="tabular" id="lineTotal">$199.00</span></div>
+            </div>
+          </div>
+
+          <div class="trust-list">
+            <div class="trust-row">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+              Card details are never stored on our servers
+            </div>
+            <div class="trust-row">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+              256-bit TLS encryption in transit
+            </div>
+            <div class="trust-row">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+              PCI-DSS aligned processing
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ Payment panel ============ -->
+        <section class="pay-panel">
+          <div>
+            <h1 class="h3" id="panelTitle">Pay with card</h1>
+            <p class="small muted" style="margin-top:6px">Choose a payment method to continue.</p>
+          </div>
+
+          <div class="methods" role="group" aria-label="Payment method">
+            <button class="method" data-method="card" aria-pressed="true">
+              <span class="method-glyph">💳</span> Card
+            </button>
+            <button class="method" data-method="bank" aria-pressed="false">
+              <span class="method-glyph">🏦</span> Bank transfer
+            </button>
+            <button class="method" data-method="mobile" aria-pressed="false">
+              <span class="method-glyph">📱</span> Mobile money
+            </button>
+            <button class="method" data-method="wallet" aria-pressed="false">
+              <span class="method-glyph">👛</span> Wallet
+            </button>
+            <button class="method" data-method="crypto" aria-pressed="false">
+              <span class="method-glyph">₿</span> Crypto
+            </button>
+            <button class="method" data-method="cash" aria-pressed="false">
+              <span class="method-glyph">🌍</span> Cash pickup
+            </button>
+          </div>
+
+          <!-- Card form -->
+          <div id="paneCard">
+            <div class="card-preview" style="margin-bottom:var(--s-5)">
+              <div class="card-preview-top">
+                <span class="card-chip" aria-hidden="true"></span>
+                <span class="card-brand" id="cardBrand">CARD</span>
+              </div>
+              <div class="card-number-display" id="cardNumberDisplay">•••• •••• •••• ••••</div>
+              <div class="card-meta">
+                <div>
+                  <div class="card-meta-label">Card holder</div>
+                  <div class="card-meta-value" id="cardHolderDisplay">YOUR NAME</div>
+                </div>
+                <div>
+                  <div class="card-meta-label">Expires</div>
+                  <div class="card-meta-value" id="cardExpiryDisplay">MM/YY</div>
+                </div>
+              </div>
+            </div>
+
+            <form class="pay-form" id="cardForm" novalidate>
+              <div class="field">
+                <label class="label" for="cardNumber">Card number</label>
+                <div class="input-group">
+                  <span class="adorn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="2" y="5" width="20" height="14" rx="3"/><path d="M2 10h20"/></svg>
+                  </span>
+                  <input class="input" id="cardNumber" inputmode="numeric" autocomplete="cc-number" placeholder="4242 4242 4242 4242" maxlength="23">
+                </div>
+                <span class="field-error" id="errCardNumber"></span>
+              </div>
+
+              <div class="grid grid-2">
+                <div class="field">
+                  <label class="label" for="cardExpiry">Expiry</label>
+                  <input class="input" id="cardExpiry" inputmode="numeric" autocomplete="cc-exp" placeholder="MM/YY" maxlength="5">
+                  <span class="field-error" id="errCardExpiry"></span>
+                </div>
+                <div class="field">
+                  <label class="label" for="cardCvc">CVC</label>
+                  <input class="input" id="cardCvc" inputmode="numeric" autocomplete="cc-csc" placeholder="123" maxlength="4">
+                  <span class="field-error" id="errCardCvc"></span>
+                </div>
+              </div>
+
+              <div class="field">
+                <label class="label" for="cardHolder">Name on card</label>
+                <input class="input" id="cardHolder" autocomplete="cc-name" placeholder="Ada Lovelace">
+                <span class="field-error" id="errCardHolder"></span>
+              </div>
+
+              <div class="field">
+                <label class="label" for="cardEmail">Email for receipt</label>
+                <input class="input" id="cardEmail" type="email" autocomplete="email" placeholder="you@example.com">
+                <span class="field-error" id="errCardEmail"></span>
+              </div>
+
+              <div class="pay-note">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="flex:none;margin-top:2px"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v4h1"/></svg>
+                <span>
+                  <strong style="color:var(--text-1)">Sandbox mode.</strong>
+                  No payment is processed and nothing is transmitted or stored. Use the test cards below.
+                </span>
+              </div>
+
+              <div class="test-cards">
+                <button type="button" class="test-card-btn" data-testcard="4242424242424242">
+                  <span>4242 4242 4242 4242</span><span class="badge badge-success tiny">Succeeds</span>
+                </button>
+                <button type="button" class="test-card-btn" data-testcard="4000000000000002">
+                  <span>4000 0000 0000 0002</span><span class="badge badge-danger tiny">Declined</span>
+                </button>
+              </div>
+
+              <button class="btn btn-primary btn-lg btn-block" type="submit" id="payBtn">
+                Pay <span id="payBtnAmount">$199.00</span>
+              </button>
+            </form>
+          </div>
+
+          <!-- Bank pane -->
+          <div id="paneBank" hidden>
+            <div class="instructions">
+              <div class="instruction-card">
+                <h4>Transfer to this account</h4>
+                <div class="copy-line"><span class="muted small">Bank</span><span class="val">Meridian Demo Bank</span></div>
+                <div class="copy-line"><span class="muted small">Account name</span><span class="val">PayoutFlow Holdings</span></div>
+                <div class="copy-line"><span class="muted small">Account number</span><span class="val" id="bankAcct">8801 4470 2291</span></div>
+                <div class="copy-line"><span class="muted small">Routing (ABA)</span><span class="val">021000021</span></div>
+                <div class="copy-line"><span class="muted small">Reference</span><span class="val" id="bankRef">PF-199-1042</span></div>
+              </div>
+              <button class="btn btn-primary btn-lg btn-block" id="bankPaidBtn">I've sent the transfer</button>
+            </div>
+          </div>
+
+          <!-- Mobile money pane -->
+          <div id="paneMobile" hidden>
+            <div class="instructions">
+              <div class="instruction-card">
+                <h4>Pay via mobile money</h4>
+                <div class="copy-line"><span class="muted small">Provider</span><span class="val">GCash</span></div>
+                <div class="copy-line"><span class="muted small">Account name</span><span class="val">PayoutFlow Holdings</span></div>
+                <div class="copy-line"><span class="muted small">Mobile number</span><span class="val">+63 917 000 4471</span></div>
+                <div class="copy-line"><span class="muted small">Reference</span><span class="val">PF-199-1042</span></div>
+              </div>
+              <button class="btn btn-primary btn-lg btn-block" id="mobilePaidBtn">I've sent the payment</button>
+            </div>
+          </div>
+
+          <!-- Wallet pane -->
+          <div id="paneWallet" hidden>
+            <div class="instructions">
+              <div class="instruction-card row gap-5 wrap">
+                <div class="qr-holder" id="qrHolder" aria-label="QR code (decorative)"></div>
+                <div class="grow">
+                  <h4>Scan to pay from your wallet</h4>
+                  <div class="copy-line"><span class="muted small">Network</span><span class="val">USDC · Polygon</span></div>
+                  <div class="copy-line"><span class="muted small">Address</span><span class="val">0x7a2f••••••••9c41</span></div>
+                  <div class="copy-line"><span class="muted small">Amount</span><span class="val" id="walletAmount">199.00 USDC</span></div>
+                </div>
+              </div>
+              <button class="btn btn-primary btn-lg btn-block" id="walletPaidBtn">I've sent the funds</button>
+            </div>
+          </div>
+
+          <!-- Crypto pane -->
+          <div id="paneCrypto" hidden>
+            <div class="instructions">
+              <div class="instruction-card row gap-5 wrap">
+                <div class="qr-holder" id="qrHolder2" aria-label="QR code (decorative)"></div>
+                <div class="grow">
+                  <h4>Send the exact amount</h4>
+                  <div class="copy-line"><span class="muted small">Network</span><span class="val">Bitcoin (BTC)</span></div>
+                  <div class="copy-line"><span class="muted small">Address</span><span class="val">bc1q••••••••••••8fk</span></div>
+                  <div class="copy-line"><span class="muted small">Rate locked</span><span class="val">15 minutes</span></div>
+                </div>
+              </div>
+              <button class="btn btn-primary btn-lg btn-block" id="cryptoPaidBtn">I've sent the crypto</button>
+            </div>
+          </div>
+
+          <!-- Cash pickup pane -->
+          <div id="paneCash" hidden>
+            <div class="instructions">
+              <div class="instruction-card">
+                <h4>Cash pickup</h4>
+                <p class="small muted" style="margin-bottom:var(--s-4)">
+                  Show this code at any Western Union or MoneyGram agent to complete payment.
+                </p>
+                <div class="copy-line"><span class="muted small">Pickup code</span><span class="val">MTCN 4471 2291 88</span></div>
+                <div class="copy-line"><span class="muted small">Receiver</span><span class="val">PayoutFlow Holdings</span></div>
+                <div class="copy-line"><span class="muted small">City / country</span><span class="val">Manila, PH</span></div>
+              </div>
+              <button class="btn btn-primary btn-lg btn-block" id="cashPaidBtn">I've paid at an agent</button>
+            </div>
+          </div>
+
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <footer style="border-top:1px solid var(--line);padding:var(--s-5) 0">
+    <div class="container row between gap-4 wrap">
+      <p class="tiny muted">PayoutFlow demo checkout · no real payments are processed</p>
+      <p class="tiny muted">Need help? <a href="index.html" style="color:var(--indigo-400)">Contact support</a></p>
+    </div>
+  </footer>
+</div>
+
+<script type="module" src="assets/js/checkout.js?v=4"></script>
+</body>
+</html>

@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PayoutFlow — Payouts &amp; payment infrastructure for modern businesses</title>
+  <meta name="description" content="PayoutFlow is a premium demo of enterprise payout and payment infrastructure: global disbursements, hosted checkout, and a real-time ledger.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/theme.css?v=4">
+  <link rel="stylesheet" href="assets/css/site.css?v=4">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%236366f1'/%3E%3Cpath d='M11 21V11h6a3.5 3.5 0 010 7h-3' stroke='white' stroke-width='2.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+</head>
+<body>
+
+<!-- ============ Header ============ -->
+<header class="site-header" id="header">
+  <div class="container row between gap-4">
+    <a href="index.html" class="brand" aria-label="PayoutFlow home">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 32 32" width="20" height="20"><path d="M11 22V10h6.5a4 4 0 010 8H14" stroke="currentColor" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+      <span class="brand-name">PayoutFlow</span>
+    </a>
+
+    <nav class="nav-desktop" aria-label="Primary">
+      <a href="#platform">Platform</a>
+      <a href="#methods">Payment methods</a>
+      <a href="#security">Security</a>
+      <a href="dashboard.html">Dashboard</a>
+    </nav>
+
+    <div class="row gap-2">
+      <a href="checkout.html" class="btn btn-ghost hide-sm">Live checkout demo</a>
+      <a href="dashboard.html" class="btn btn-primary btn-sm">Open dashboard</a>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+
+  <div class="nav-mobile" id="navMobile" hidden>
+    <a href="#platform">Platform</a>
+    <a href="#methods">Payment methods</a>
+    <a href="#security">Security</a>
+    <a href="checkout.html">Live checkout demo</a>
+    <a href="dashboard.html">Dashboard</a>
+  </div>
+</header>
+
+<main>
+
+  <!-- ============ Hero ============ -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <span class="badge badge-brand reveal">
+            <span class="badge-dot"></span> Interactive demo · sandbox data only
+          </span>
+
+          <h1 class="display reveal reveal-1">
+            Move money <span class="gradient-text">anywhere</span>,<br>at enterprise scale.
+          </h1>
+
+          <p class="lead reveal reveal-2" style="max-width:52ch">
+            One platform to pay out contractors, suppliers and sellers across
+            banks, mobile money and wallets — with a real-time ledger, hosted
+            checkout and webhooks your finance team can trust.
+          </p>
+
+          <div class="row gap-3 wrap reveal reveal-3" style="margin-top:var(--s-6)">
+            <a href="dashboard.html" class="btn btn-primary btn-lg">
+              Open the dashboard
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+            </a>
+            <a href="checkout.html" class="btn btn-lg">Try the checkout</a>
+          </div>
+
+          <div class="hero-trust reveal reveal-4">
+            <div class="trust-item">
+              <strong class="tabular">99.99%</strong>
+              <span>Platform uptime</span>
+            </div>
+            <span class="trust-sep" aria-hidden="true"></span>
+            <div class="trust-item">
+              <strong class="tabular">120+</strong>
+              <span>Payout corridors</span>
+            </div>
+            <span class="trust-sep" aria-hidden="true"></span>
+            <div class="trust-item">
+              <strong class="tabular">&lt; 2s</strong>
+              <span>Median settlement</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dashboard preview card -->
+        <div class="hero-visual reveal reveal-2">
+          <div class="preview-shell">
+            <div class="preview-bar">
+              <span class="dot dot-red"></span><span class="dot dot-amber"></span><span class="dot dot-green"></span>
+              <span class="preview-url mono tiny">app.payoutflow.dev/dashboard</span>
+            </div>
+
+            <div class="preview-body">
+              <div class="preview-balance">
+                <span class="tiny muted">Available balance</span>
+                <div class="row between gap-3">
+                  <strong class="preview-amount tabular" data-count-to="2481560" data-format="money">$0.00</strong>
+                  <span class="badge badge-success tiny"><span class="badge-dot"></span>+12.4%</span>
+                </div>
+              </div>
+
+              <div class="preview-chart" aria-hidden="true">
+                <svg viewBox="0 0 320 84" preserveAspectRatio="none">
+                  <defs>
+                    <linearGradient id="chartFill" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stop-color="#6366f1" stop-opacity=".45"/>
+                      <stop offset="100%" stop-color="#6366f1" stop-opacity="0"/>
+                    </linearGradient>
+                    <linearGradient id="chartLine" x1="0" y1="0" x2="1" y2="0">
+                      <stop offset="0%" stop-color="#6366f1"/>
+                      <stop offset="100%" stop-color="#22d3ee"/>
+                    </linearGradient>
+                  </defs>
+                  <path d="M0 66 L40 58 L80 62 L120 44 L160 50 L200 32 L240 36 L280 18 L320 12 V84 H0 Z" fill="url(#chartFill)"/>
+                  <path d="M0 66 L40 58 L80 62 L120 44 L160 50 L200 32 L240 36 L280 18 L320 12" fill="none" stroke="url(#chartLine)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+
+              <div class="preview-list">
+                <div class="preview-row">
+                  <span class="avatar">AO</span>
+                  <div class="grow">
+                    <div class="preview-name">Adaeze Okafor</div>
+                    <div class="tiny muted">Bank transfer · NGN</div>
+                  </div>
+                  <span class="badge badge-success tiny">Paid</span>
+                </div>
+                <div class="preview-row">
+                  <span class="avatar" style="background:linear-gradient(135deg,#22d3ee,#8b5cf6)">MR</span>
+                  <div class="grow">
+                    <div class="preview-name">Marcus Reyes</div>
+                    <div class="tiny muted">Mobile money · PHP</div>
+                  </div>
+                  <span class="badge badge-warn tiny">Processing</span>
+                </div>
+                <div class="preview-row">
+                  <span class="avatar" style="background:linear-gradient(135deg,#34d399,#6366f1)">LK</span>
+                  <div class="grow">
+                    <div class="preview-name">Lena Kowalski</div>
+                    <div class="tiny muted">Wallet · USDC</div>
+                  </div>
+                  <span class="badge badge-success tiny">Paid</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="float-card float-1">
+            <span class="float-icon">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 5l6 4 6-4"/><rect x="2" y="3" width="12" height="10" rx="2"/></svg>
+            </span>
+            <div>
+              <div class="tiny" style="color:var(--text-1);font-weight:600">Payout settled</div>
+              <div class="tiny muted mono">po_8fK2mQ · $4,250.00</div>
+            </div>
+          </div>
+
+          <div class="float-card float-2">
+            <span class="float-icon float-icon-green">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5l3.5 3.5L13 5"/></svg>
+            </span>
+            <div>
+              <div class="tiny" style="color:var(--text-1);font-weight:600">KYC verified</div>
+              <div class="tiny muted">Within 40 seconds</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Logo strip ============ -->
+  <section class="logo-strip" aria-label="Trusted by">
+    <div class="container">
+      <p class="tiny muted text-center" style="letter-spacing:.12em;text-transform:uppercase">Built for teams disbursing at scale</p>
+      <div class="marquee">
+        <div class="marquee-track">
+          <span>Northwind&nbsp;Labs</span><span>Vertex&nbsp;Logistics</span><span>Helio&nbsp;Health</span>
+          <span>Kite&nbsp;Commerce</span><span>Orbit&nbsp;Studios</span><span>Meridian&nbsp;Bank</span>
+          <span>Northwind&nbsp;Labs</span><span>Vertex&nbsp;Logistics</span><span>Helio&nbsp;Health</span>
+          <span>Kite&nbsp;Commerce</span><span>Orbit&nbsp;Studios</span><span>Meridian&nbsp;Bank</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Platform ============ -->
+  <section class="section" id="platform">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">The platform</span>
+        <h2 class="h2">Everything money movement needs,<br class="hide-sm"> in one clean surface.</h2>
+        <p class="lead" style="max-width:60ch;margin-top:var(--s-4)">
+          PayoutFlow replaces a patchwork of spreadsheets, bank portals and scripts
+          with a single, auditable system of record for every cent that leaves your account.
+        </p>
+      </div>
+
+      <div class="grid grid-3" style="margin-top:var(--s-8)">
+        <article class="card card-pad card-hover feature">
+          <span class="feature-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+          </span>
+          <h3 class="h3">Global payouts</h3>
+          <p>Send to bank accounts, mobile money, cards and wallets across 120+ corridors, with local rails and transparent FX.</p>
+        </article>
+
+        <article class="card card-pad card-hover feature">
+          <span class="feature-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M4 12h16M4 17h10"/></svg>
+          </span>
+          <h3 class="h3">Real-time ledger</h3>
+          <p>Every credit and debit is an immutable entry. Your balance is always derived from history, never guessed — so reconciliation takes seconds.</p>
+        </article>
+
+        <article class="card card-pad card-hover feature">
+          <span class="feature-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="3"/><path d="M2 10h20"/></svg>
+          </span>
+          <h3 class="h3">Hosted checkout</h3>
+          <p>A conversion-tuned payment page that accepts cards and local methods. Card data goes straight to the processor, keeping you out of PCI scope.</p>
+        </article>
+
+        <article class="card card-pad card-hover feature">
+          <span class="feature-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-4z"/><path d="M9 12l2 2 4-4"/></svg>
+          </span>
+          <h3 class="h3">Idempotent &amp; safe</h3>
+          <p>Retries never double-pay. Idempotency keys, atomic balance checks and signed webhooks make every operation safe to replay.</p>
+        </article>
+
+        <article class="card card-pad card-hover feature">
+          <span class="feature-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v12H4z"/><path d="M8 20h8M12 16v4"/></svg>
+          </span>
+          <h3 class="h3">Developer first</h3>
+          <p>REST API, webhooks with HMAC signatures, and a full audit trail. Ship an integration in an afternoon, not a quarter.</p>
+        </article>
+
+        <article class="card card-pad card-hover feature">
+          <span class="feature-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+          </span>
+          <h3 class="h3">Instant settlement</h3>
+          <p>Median settlement under two seconds on local rails, with live status events streaming back to your systems as they happen.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Metrics band ============ -->
+  <section class="section-tight">
+    <div class="container">
+      <div class="card card-lg metrics-band">
+        <div class="grid grid-4">
+          <div class="stat">
+            <span class="stat-value gradient-text tabular" data-count-to="4.8" data-decimals="1" data-prefix="$" data-suffix="B">$0B</span>
+            <span class="stat-label">Processed annually</span>
+          </div>
+          <div class="stat">
+            <span class="stat-value tabular" data-count-to="120" data-suffix="+">0</span>
+            <span class="stat-label">Payout corridors</span>
+          </div>
+          <div class="stat">
+            <span class="stat-value tabular" data-count-to="99.99" data-decimals="2" data-suffix="%">0%</span>
+            <span class="stat-label">Uptime SLA</span>
+          </div>
+          <div class="stat">
+            <span class="stat-value tabular" data-count-to="1.9" data-decimals="1" data-suffix="s">0s</span>
+            <span class="stat-label">Median settlement</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Payment methods ============ -->
+  <section class="section" id="methods">
+    <div class="container">
+      <div class="split">
+        <div>
+          <span class="eyebrow">Payment methods</span>
+          <h2 class="h2" style="margin-top:var(--s-3)">Every rail your customers<br>actually use.</h2>
+          <p class="lead" style="margin-top:var(--s-4)">
+            One integration, many methods. Route by country, currency and cost —
+            PayoutFlow picks the cheapest rail that can deliver.
+          </p>
+
+          <ul class="tick-list" style="margin-top:var(--s-6)">
+            <li><span class="tick"></span> Cards — Visa, Mastercard, Amex</li>
+            <li><span class="tick"></span> Bank transfers &amp; local ACH rails</li>
+            <li><span class="tick"></span> Mobile money — GCash, PayMaya, M-Pesa, MoMo</li>
+            <li><span class="tick"></span> Digital wallets &amp; stablecoin payouts</li>
+          </ul>
+
+          <a href="checkout.html" class="btn btn-primary" style="margin-top:var(--s-6)">
+            Open the live checkout demo
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+          </a>
+        </div>
+
+        <div class="method-grid">
+          <div class="method-tile"><span class="method-glyph">💳</span><div><div class="method-name">Card</div><div class="tiny muted">Instant · 2.9% + 30¢</div></div></div>
+          <div class="method-tile"><span class="method-glyph">🏦</span><div><div class="method-name">Bank transfer</div><div class="tiny muted">1–2 days · 1%</div></div></div>
+          <div class="method-tile"><span class="method-glyph">📱</span><div><div class="method-name">Mobile money</div><div class="tiny muted">Seconds · 1.5%</div></div></div>
+          <div class="method-tile"><span class="method-glyph">👛</span><div><div class="method-name">Wallet</div><div class="tiny muted">Seconds · 1%</div></div></div>
+          <div class="method-tile"><span class="method-glyph">🌍</span><div><div class="method-name">WU / MoneyGram</div><div class="tiny muted">Minutes · cash pickup</div></div></div>
+          <div class="method-tile"><span class="method-glyph">₿</span><div><div class="method-name">Crypto</div><div class="tiny muted">Minutes · network fee</div></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Security ============ -->
+  <section class="section" id="security">
+    <div class="container">
+      <div class="card card-lg security-band">
+        <div class="security-grid">
+          <div>
+            <span class="eyebrow">Security &amp; compliance</span>
+            <h2 class="h2" style="margin-top:var(--s-3)">Built to survive an audit.</h2>
+            <p class="lead" style="margin-top:var(--s-4)">
+              PayoutFlow is designed around the controls auditors and regulators
+              expect: least privilege, tamper-evident history and provable consent.
+            </p>
+            <div class="row gap-2 wrap" style="margin-top:var(--s-5)">
+              <span class="chip">PCI-DSS aligned</span>
+              <span class="chip">SOC 2 controls</span>
+              <span class="chip">GDPR ready</span>
+              <span class="chip">KYC / AML hooks</span>
+            </div>
+          </div>
+
+          <div class="stack gap-3">
+            <div class="sec-item">
+              <span class="sec-icon">🔐</span>
+              <div><div class="sec-title">No card data, ever</div><div class="small muted">Card details are entered on the processor's page and never touch our servers.</div></div>
+            </div>
+            <div class="sec-item">
+              <span class="sec-icon">🧾</span>
+              <div><div class="sec-title">Immutable audit log</div><div class="small muted">Every action is attributed to an actor with time, IP and payload.</div></div>
+            </div>
+            <div class="sec-item">
+              <span class="sec-icon">✍️</span>
+              <div><div class="sec-title">Signed webhooks</div><div class="small muted">HMAC-SHA256 signatures with replay protection on every event.</div></div>
+            </div>
+            <div class="sec-item">
+              <span class="sec-icon">🛡️</span>
+              <div><div class="sec-title">Role-based access</div><div class="small muted">Scoped API keys, dashboard sessions and KYC gating on money movement.</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CTA ============ -->
+  <section class="section">
+    <div class="container">
+      <div class="card card-lg cta-band">
+        <span class="eyebrow">Get started</span>
+        <h2 class="h2" style="margin-top:var(--s-3)">Put your money movement<br>on rails today.</h2>
+        <p class="lead" style="margin-top:var(--s-4);max-width:52ch;margin-inline:auto">
+          Explore the dashboard with seeded demo data, or run a payment through the
+          hosted checkout. No signup, no real money, nothing to install.
+        </p>
+        <div class="row gap-3 center wrap" style="margin-top:var(--s-6)">
+          <a href="dashboard.html" class="btn btn-primary btn-lg">Open the dashboard</a>
+          <a href="checkout.html" class="btn btn-lg">Try the checkout</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============ Footer ============ -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <a href="index.html" class="brand">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 32 32" width="20" height="20"><path d="M11 22V10h6.5a4 4 0 010 8H14" stroke="currentColor" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          <span class="brand-name">PayoutFlow</span>
+        </a>
+        <p class="small muted" style="margin-top:var(--s-4);max-width:34ch">
+          Payout and payment infrastructure for teams that move money at scale.
+        </p>
+      </div>
+
+      <div class="footer-col">
+        <h4>Product</h4>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="checkout.html">Hosted checkout</a>
+        <a href="#methods">Payment methods</a>
+        <a href="#platform">Platform</a>
+      </div>
+
+      <div class="footer-col">
+        <h4>Developers</h4>
+        <a href="dashboard.html#api">API keys</a>
+        <a href="dashboard.html#webhooks">Webhooks</a>
+        <a href="dashboard.html#ledger">Ledger</a>
+        <a href="dashboard.html#audit">Audit log</a>
+      </div>
+
+      <div class="footer-col">
+        <h4>Company</h4>
+        <a href="#security">Security</a>
+        <a href="#platform">About</a>
+        <a href="#methods">Coverage</a>
+        <a href="#header">Contact</a>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p class="tiny muted">
+        © <span id="year"></span> PayoutFlow. A front-end demonstration project — all data is simulated.
+      </p>
+      <p class="tiny muted">
+        Not a licensed financial service. No real payments are processed.
+      </p>
+    </div>
+  </div>
+</footer>
+
+<script type="module" src="assets/js/landing.js?v=4"></script>
+</body>
+</html>
